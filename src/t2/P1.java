@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class P1 {
+	public static final String experimentsFolder = "results/";
 	
 	public static void main(String[] args) {
 		/*
@@ -31,7 +32,7 @@ public class P1 {
 	
 	public static void experiment(int machines, int jobsNum, int runs) {
 		try {
-			String filename = "EX" + machines + "M" + jobsNum + "J" + ".mat";
+			String filename = experimentsFolder + "E" + machines + "M" + jobsNum + "J" + ".mat";
 			BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
 			int[] line = new int[2];
 			for (int i=0; i<runs; i++) {
