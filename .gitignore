@@ -1,4 +1,7 @@
 bin/
+informe/*.aux
+informe/*.log
+informe/*.toc
 .settings/
 .classpath
 .project

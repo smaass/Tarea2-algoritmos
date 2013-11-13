@@ -1,0 +1,111 @@
+\documentclass[12pt,letterpaper]{article}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[right=3cm,left=3cm,top=2cm,bottom=2cm,headsep=0cm,footskip=0.5cm]{geometry}
+\usepackage[dvips]{graphicx}
+\usepackage{verbatim}
+\usepackage{multicol}
+\usepackage{fancyvrb,relsize}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{listings}
+\usepackage{wrapfig}
+\usepackage{subfig}
+\usepackage{placeins}
+\usepackage{setspace}
+\usepackage{amsmath}
+
+\begin{document}
+\begin{titlepage}
+\begin{figure}[ht]
+\includegraphics[scale=1]{logo_departamento.eps}
+\label{DCC}
+\vspace{1cm}
+\end{figure}
+\begin{center}
+\vspace{4cm} {\Huge Tarea 2: Planificación de Trabajos}
+
+\vspace{1cm} {\Large CC4102 - Diseño y Análisis de Algoritmos}
+\vspace{7.5cm}
+\end{center}
+
+\begin{tabbing}
+\hspace*{7cm}\=\hspace*{3.5cm}\= \kill
+
+\> {\large Profesor:} 	\> 	{\large Gonzalo Navarro} \\ \\
+\> {\large Auxiliar:}	\> 	{\large Teresa Bracamonte} \\ \\
+\> {\large Alumnos:}	\> 	{\large Cristián Carreño} \\ \\
+\> {\large } 			\> 	{\large Sergio Maass} \\ \\
+\> {\large Fecha:} 		\> 	{\large 17 de Noviembre de 2013}
+\end{tabbing}
+
+\end{titlepage}
+%\begin{doublespace}
+
+%\tableofcontents
+\newpage
+
+\section{Introducción}
+	Los algoritmos online cumplen un rol muy importante al permitir resolver problemas a medida que su entrada se va recibiendo, o sea, sin conocer el total de los datos previamente. Pero además, son muy útiles para aproximar soluciones a problemas difíciles en tiempo razonablemente corto. \\
+	
+	Diversos problemas de optimización pertenecientes a la clase $NP$ admiten soluciones aproximadas mediante algoritmos online $p$-competitivos. Un algoritmo de estas características permite resolver instancias arbitrarias del problema en tiempo polinomial, garantizando que la solución estará dentro de un radio $p$ del óptimo. Esto es muy importante, ya que si $P \not= NP$ -lo que parece ser el caso- no es posible encontrar una solución óptima en tiempo polinomial. \\
+	
+	En este informe se presentarán dos versiones del problema de planificación de trabajos ($NP-completo$\footnote{Garey, M.R. (1976). "The Complexity of Flowshop and Jobshop Scheduling"}) y se diseñará un algoritmo online 2-competitivo para cada una. Se demostrará formalmente la competitividad de cada algoritmo y luego se comprobará experimentalmente.
+
+\section{Trabajos de una etapa}
+	El problema consiste en un conjunto de $n$ trabajos que deben asignarse a $m$ máquinas idénticas. Cada trabajo $j$ requiere una cantidad de tiempo $T_{j}$ para ser finalizado. Además, cada trabajo $j$ sólo puede ser asignado a una máquina $A_{j}$, y debe ejecutarse por completo y sin interrupciones en esta.\\
+	
+Sea $A$ una asignación de trabajos a máquinas, y sea el $makespan$ definido por: $makespan(A) = max_{i} \sum_{A_{j}=i} T_{j}$. El objetivo del problema es determinar la asignación $A$ que minimiza el $makespan$.
+
+\subsection{Algoritmo 2-competitivo propuesto}
+	El algoritmo consiste simplemente en asignar cada trabajo $j$ a la máquina que posea la menor carga. En particular, para cada $j$:
+\begin{itemize}
+\item[1.] Obtener la máquina $M_{i}$ de menor carga $L_{i}$.
+\item[2.] Asignar $j$ a $M_{i}$
+\item[3.] $L_{i} := L_{i} + T_{j}$
+\end{itemize}
+
+	La complejidad del algoritmo depende del paso 1. Usando un $heap$, o un algoritmo como quicksort, podemos obtener la máquina de menor carga en tiempo $O(\log m)$. Por lo tanto, para $n$ trabajos tenemos $O(n \log m)$.
+
+\subsection{Demostración de competitividad}
+	Sea $L_{i}$ la carga de la máquina con mayor tiempo asignado, y sea $j$ su último trabajo. La carga de la máquina antes de esa asignación era $L_{i} - T_{j}$. Debido a que el algoritmo asigna un trabajo a la máquina de menor carga tenemos que $L_{i} - T_{j} \leq L_{k}, \forall k \in [1, m]$. \\
+	
+	Luego, sumando sobre todas las máquinas obtenemos
+	
+\begin{eqnarray}
+L_{i} - T_{j}	&\leq& 		\frac{1}{m} \sum_{k=1}^{m} L_{k}	\nonumber \\
+				&=& 		\frac{1}{m} \sum_{k=1}^{n} T_{k}  	\nonumber \\
+				&\leq& 		L^{*} \label{eq:1}
+\end{eqnarray}
+
+Donde $L^{*}$ corresponde al $makespan$ del caso óptimo.\\
+
+Finalmente, considerando (\ref{eq:1}) y el hecho de que $T_{j} \leq L^{*}$, ya que el trabajo más largo igual debe ser realizado por alguna máquina en el caso óptimo, tenemos que 
+
+\begin{eqnarray}
+L_{i}		&=&		L_{i} - T_{j} + T_{j}	\nonumber \\
+			&\leq&	L^{*} + T_{j} 			\nonumber \\
+			&\leq& 2 L^{*}
+\end{eqnarray}
+
+Con lo que se demuestra que el $makespan$ obtenido por el algoritmo online está acotado por el doble del $makespan$ en el caso óptimo. O sea, el algoritmo es 2-competitivo.
+
+\subsection{Comprobación empírica de competitividad}
+\subsubsection{Implementación del algoritmo online}
+\subsubsection{Implementación del algoritmo óptimo}
+\subsubsection{Experimentos}
+\subsubsection{Resultados}
+
+\section{Trabajos con múltiples etapas}
+\subsection{Algoritmo 2-competitivo propuesto}
+\subsection{Demostración de competitividad}
+\subsection{Comprobación empírica de competitividad}
+\subsubsection{Implementación del algoritmo online}
+\subsubsection{Implementación del algoritmo óptimo}
+\subsubsection{Experimentos}
+\subsubsection{Resultados}
+
+\section{Conclusiones}
+
+%\end{doublespace}
+\end{document}
