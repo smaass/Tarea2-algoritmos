@@ -65,7 +65,7 @@ Sea $A$ una asignación de trabajos a máquinas, y sea el $makespan$ definido po
 \item[3.] $L_{i} := L_{i} + T_{j}$
 \end{itemize}
 
-	La complejidad del algoritmo depende del paso 1. Usando un $heap$, o un algoritmo como quicksort, podemos obtener la máquina de menor carga en tiempo $O(\log m)$. Por lo tanto, para $n$ trabajos tenemos $O(n \log m)$.
+	La complejidad del algoritmo depende del paso 1. Usando un $heap$ podemos obtener la máquina de menor carga en tiempo $O(\log m)$. Por lo tanto, para $n$ trabajos tenemos $O(n \log m)$.
 
 \subsection{Demostración de competitividad}
 	Sea $L_{i}$ la carga de la máquina con mayor tiempo asignado, y sea $j$ su último trabajo. La carga de la máquina antes de esa asignación era $L_{i} - T_{j}$. Debido a que el algoritmo asigna un trabajo a la máquina de menor carga tenemos que $L_{i} - T_{j} \leq L_{k}, \forall k \in [1, m]$. \\

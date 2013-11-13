@@ -5,20 +5,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.PriorityQueue;
 
 public class P1 {
 	public static final String experimentsFolder = "results/";
 	
 	public static void main(String[] args) {
-		/*
-		List<Job> jobs = randomJobsList(10);
-		System.out.println("Jobs List: " + jobsToString(jobs) + "\n");
-		Planning online = new OnlinePlanning(4, jobs);
-		Planning offline = new OfflinePlanning(4, jobs);
-		System.out.println("Online plan: " + intArrayToString(online.getAssignment()));
-		System.out.println("Online makespan: " + online.makespan() + "\n");
-		System.out.println("Offline plan: " + intArrayToString(offline.getAssignment()));
-		System.out.println("Offline makespan: " + offline.makespan());*/
 		System.out.println("Experimentando...");
 		experiments();
 		System.out.println("Fin :D");
@@ -50,6 +42,8 @@ public class P1 {
 	private static void comparePlans(int machines, List<Job> jobs, int[] output) {
 		Planning offline = new OfflinePlanning(machines, jobs);
 		Planning online = new OnlinePlanning(machines, jobs);
+		offline.plan();
+		online.plan();
 		output[0] = offline.makespan();
 		output[1] = online.makespan();
 	}
@@ -81,11 +75,13 @@ public class P1 {
 		return jobs;
 	}
 	
-	private static class Machine {
+	private static class Machine implements Comparable<Machine> {
+		private int machineNum;
 		private int busyTime;
 		
-		public Machine() {
+		public Machine(int num) {
 			busyTime = 0;
+			machineNum = num;
 		}
 		
 		public void assignJob(Job j) {
@@ -99,6 +95,15 @@ public class P1 {
 		public void clear() {
 			busyTime = 0;
 		}
+		
+		public int num() {
+			return  machineNum;
+		}
+
+		@Override
+		public int compareTo(Machine m) {
+			return this.busyTime - m.busyTime;
+		}
 	}
 	
 	private static abstract class Planning {
@@ -108,11 +113,10 @@ public class P1 {
 		public Planning(int numMachines, List<Job> jobs) {
 			machines = new Machine[numMachines];
 			for (int i=0; i<numMachines; i++) {
-				machines[i] = new Machine();
+				machines[i] = new Machine(i);
 			}
 			this.jobs = new Job[jobs.size()];
 			jobs.toArray(this.jobs);
-			plan();
 		}
 		
 		public int makespan() {
@@ -131,10 +135,15 @@ public class P1 {
 	}
 	
 	private static class OnlinePlanning extends Planning {
+		PriorityQueue<Machine> mQueue;
 		private int[] assignment;
 		
 		public OnlinePlanning(int numMachines, List<Job> jobs) {
 			super(numMachines, jobs);
+			mQueue = new PriorityQueue<Machine>();
+			for (Machine m : machines) {
+				mQueue.add(m);
+			}
 		}
 
 		protected void plan() {
@@ -145,18 +154,10 @@ public class P1 {
 		}
 		
 		private void assignToLessBusyMachine(int jobIndex) {
-			Machine chosenMachine = machines[0];
-			int minTime = chosenMachine.time();
-			int chosenIndex = 0;
-			for (int i=1; i<machines.length; i++) {
-				if (minTime > machines[i].time()) {
-					chosenMachine = machines[i];
-					minTime = chosenMachine.time();
-					chosenIndex = i;
-				}
-			}			
-			assignment[jobIndex] = chosenIndex;
-			chosenMachine.assignJob(jobs[jobIndex]);
+			Machine chosenM = mQueue.poll();
+			assignment[jobIndex] = chosenM.num();
+			chosenM.assignJob(jobs[jobIndex]);
+			mQueue.add(chosenM);
 		}
 
 		@Override
