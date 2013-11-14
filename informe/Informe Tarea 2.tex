@@ -128,7 +128,9 @@ Con lo que se demuestra que el $makespan$ obtenido por el algoritmo online está
 \item Se retorna $B$, el cual representa una nueva asignación.
 \end{itemize}
 
-De esta forma se verifican todas las asignaciones posibles que comienzan asignándole el trabajo $0$ a la máquina $0$. No es necesario verificar otros casos ya que asignarle el primer trabajo a otra máquina no reducirá el makespan en ningún caso.
+De esta forma se verifican todas las asignaciones posibles que comienzan asignándole el trabajo $0$ a la máquina $0$. No es necesario verificar otros casos ya que asignarle el primer trabajo a otra máquina no reducirá el makespan en ningún caso.\\
+
+Este algoritmo genera $m^{n-1}$ asignaciones y para cada una de ellas el cálculo del makespan para una lista dada toma tiempo $O(n)$. Por lo tanto, el algoritmo tiene una complejidad de $O(nm^{n-1})$. Cabe destacar que este largo tiempo podría mejorarse asegurándose de no generar asignaciones equivalentes ([0 2 2 1] y [0 1 1 2] son equivalentes porque siempre entregarán el mismo makespan), y también podría paralelizarse para aprovechar las arquitecturas multicore. Sin embargo, lo que interesa en este trabajo es comparar los makespan obtenidos por este algoritmo con los que obtiene la versión online, y no cuánto se demore, por lo que se dejará así.
 
 \subsubsection{Experimentos}
 	Para comprobar la competitividad del algoritmo online se procedió a comparar los makespan que entrega con los que entrega el algoritmo óptimo para la misma lista de trabajos y número de máquinas. Para esto se generaron listas con trabajos de duración aleatoria entre 1 y 100, y se obtuvieron los makespan para las asignaciones encontradas por ambos algoritmos.
@@ -139,11 +141,11 @@ De esta forma se verifican todas las asignaciones posibles que comienzan asigná
 \begin{figure}[ht]
 \centering
 \includegraphics[scale=0.75]{fig1.eps}
-\caption{Comparación de $makespan$ entre algoritmo online y algoritmo óptimo en función del número de trabajos. Cada punto representa la media entre 400 datos, y las barras son la desviación estándar.}
+\caption{Comparación de $makespan$ entre algoritmo online y algoritmo óptimo en función del número de trabajos, con 4 máquinas. Cada punto representa la media entre 400 datos, y las barras son la desviación estándar.}
 \label{fig:1}
 \end{figure}
 
-
+En la figura \ref{fig:1} se observa que los makespan obtenidos por el algoritmo online fueron mayores a los obtenidos por el algoritmo óptimo en un factor bastante menor a 2, que es la cota teórica calculada. Esta razón tiende a disminuir en promedio, y con desviaciones estándar cada vez más acotadas, a medida que se incrementa el número de trabajos.
 
 \section{Trabajos con múltiples etapas}
 \subsection{Algoritmo 2-competitivo propuesto}
