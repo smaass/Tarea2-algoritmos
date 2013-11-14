@@ -26,3 +26,8 @@ x = 8:2:16;
 
 # plot(x, m, '-o')
 errorbar(x, m, s)
+axis([6 18 1 2])
+title ("Comparación de makespan con algoritmo online y óptimo en función de los trabajos");
+xlabel ("Total de trabajos");
+ylabel ("makespan(online) / makespan(óptimo)");
+print -dsvg fig1.svg
