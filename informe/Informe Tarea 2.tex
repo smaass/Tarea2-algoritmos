@@ -95,10 +95,10 @@ Con lo que se demuestra que el $makespan$ obtenido por el algoritmo online está
 	Para comprobar empíricamente la competitividad del algoritmo propuesto, éste se implementó en Java junto a un algoritmo que encuentra el makespan óptimo para este problema. Luego se hicieron pruebas con ambos algoritmos, usando los mismos datos, y se compararon los makespan obtenidos.
 
 \subsubsection{Implementación del algoritmo online}
-	El algoritmo online se implementó tal cual fue descrito en la sección \ref{sec:prop-alg1}. Se utilizó la clase $PriorityQueue$ de $java.utils$, la cuál está implementada con un $heap$, para almacenar las máquinas ordenadas según carga. De este modo, se pueden planificar $n$ tareas en $m$ máquinas en tiempo $O(n \log{m})$.
+	El algoritmo online se implementó tal cual fue descrito en la sección \ref{sec:prop-alg1}. Se utilizó la clase $PriorityQueue$ de $java.utils$, la cual está implementada con un $heap$, para almacenar las máquinas ordenadas según carga. De este modo, se pueden planificar $n$ tareas en $m$ máquinas en tiempo $O(n \log{m})$.
 
 \subsubsection{Implementación del algoritmo óptimo}
-	Para obtener la asignación de una lista $L$ de $n$ trabajos a $m$ máquinas que produce un menor makespan se procedió a generar todas las posibles asignaciones que pueden entregar distinto makespan. Para esto se utilizó un arreglo $A$ de tamaño $n$ donde cada índice $i \in [0, n-1]$ representa un trabajo, y cada valor $A_{i}$ representa la máquina que se le ha asignado al trabajo $i$. Además se utilizó un objeto $G$ encargado de generar asignaciones para $A$ a través de su método $G.nextAssignment()$, y de señalar mediante un método $G.hasNext()$ si siguen habiendo asignaciones para generar. El algoritmo funciona del siguiente modo:
+	Para obtener la asignación de una lista $L$ de $n$ trabajos a $m$ máquinas que produce un menor makespan, se procedió a generar todas las posibles asignaciones que pueden entregar distinto makespan. Para esto se utilizó un arreglo $A$ de tamaño $n$ donde cada índice $i \in [0, n-1]$ representa un trabajo, y cada valor $A_{i}$ representa la máquina que se le ha asignado al trabajo $i$. Además se utilizó un objeto $G$ encargado de generar asignaciones para $A$ a través de su método $G.nextAssignment()$, y de señalar mediante un método $G.hasNext()$ si siguen habiendo asignaciones para generar. El algoritmo funciona del siguiente modo:
 	
 \begin{itemize}
 \item Se comienza con $A$ con todas sus entradas en cero.
