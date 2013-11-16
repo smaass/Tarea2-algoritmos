@@ -16,8 +16,14 @@ public class Machine {
 		freeTimes.add(new Range(0, Integer.MAX_VALUE));
 	}
 	
-	public void assignJobStage(Job j, int stage) {
-		
+	public void assignJob(Job j) {
+		int freeSpace = canTakeJob(j);
+		if (freeSpace > -1) {
+			assignJobIntoFreeSpace(j, freeSpace);
+		}
+		else {
+			assignJobToEnd(j);
+		}
 	}
 	
 	public void assignJobToEnd(Job j) {
