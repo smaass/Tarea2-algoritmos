@@ -53,13 +53,11 @@ public class OfflinePlanner extends PlanBuilder {
 		private int[][] permutations;
 		private int[][] genArray;
 		private int[] permIndex;
-		private int machines;
 		private int jobs;
 		private boolean finished;
 		
 		public AssignmentGenerator(int machines, int jobs) {
 			assert(machines > 0 && jobs > 0);
-			this.machines = machines;
 			this.jobs = jobs;
 			permutations = Utils.permutationsArray(machines);
 		}
@@ -80,10 +78,10 @@ public class OfflinePlanner extends PlanBuilder {
 			}
 			
 			for (int i=permIndex.length-1; i>=0; i--) {
-				if (i == 0 && permIndex[0] == machines-1) {
+				if (i == 0 && permIndex[0] == permutations.length-1) {
 					finished = true;
 				}
-				else if (permIndex[i] + 1 < machines) {
+				else if (permIndex[i] + 1 < permutations.length) {
 					permIndex[i]++;
 					genArray[i] = permutations[permIndex[i]];
 					break;
