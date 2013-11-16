@@ -29,11 +29,13 @@ public class Job {
 		return busyTimes;
 	}
 	
-	public boolean hasRangeBusy(Range range) {
+	public boolean fitInRange(int machine, Range machineRange) {
+		Range reducedRange = new Range(machineRange.start(), machineRange.end());
 		for (Range r : busyTimes) {
-			if (r.inRange(range)) {
-				return true;
-			}
+			reducedRange.substract(r);
+		}
+		if (reducedRange.length() > time(machine)){
+			return true;
 		}
 		return false;
 	}

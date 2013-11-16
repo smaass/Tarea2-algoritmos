@@ -7,13 +7,14 @@ import java.util.Collections;
 public class Machine {
 	private int machineNum;
 	private ArrayList<Range> freeTimes;
+	private Range endRange;
 	private int maxBusyTime;
 	
 	public Machine(int num) {
 		machineNum = num;
 		maxBusyTime = 0;
 		freeTimes =  new ArrayList<Range>();
-		freeTimes.add(new Range(0, Integer.MAX_VALUE));
+		endRange  =  new Range(0, Integer.MAX_VALUE);
 	}
 	
 	public void assignJob(Job j) {
@@ -26,13 +27,30 @@ public class Machine {
 		}
 	}
 	
+	private void createFreeTimes(ArrayList<Range> jobBusyTimes){
+		for (Range r: jobBusyTimes){
+			Range[] splits = endRange.split(r);
+			
+			if(splits[0]!= null){
+				freeTimes.add(splits[0]);
+				endRange = splits[1];
+				maxBusyTime = endRange.start();
+			}
+		}
+	}
+	
 	public void assignJobToEnd(Job j) {
 		int timeInMachine = j.time(machineNum);
 		int newMaxBusyTime = timeInMachine + maxBusyTime;
+		
+		createFreeTimes(j.busyTimes());
 
 		// Se agrega el job como ultimo proceso de la maquina y se marca un nuevo rango ocupado
-		j.addBusyTime(new Range(maxBusyTime, newMaxBusyTime));
+		Range jobBusyTime = new Range(maxBusyTime, newMaxBusyTime);
+		j.addBusyTime(jobBusyTime);
+
 		maxBusyTime = newMaxBusyTime;
+		endRange.setStart(maxBusyTime);
 	}
 	
 	public void assignJobIntoFreeSpace(Job j, int i) {
@@ -61,15 +79,8 @@ public class Machine {
 		
 		for(int i = 0; i < freeTimes.size(); i++){
 			free = freeTimes.get(i);
-			boolean ocuped = false;
-			for(Range ocupedRange: j.busyTimes()){
-				if(ocupedRange.inRange(free)){
-					ocuped = true;
-					break;
-				}
-				if(!ocuped && free.length() >= j.time(machineNum)){
-					return  i;
-				}
+			if(j.fitInRange(machineNum, free)){
+				return i;
 			}
 		}
 		return -1;
