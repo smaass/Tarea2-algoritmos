@@ -32,7 +32,7 @@ public class OfflinePlanner extends PlanBuilder {
 	
 	private void assignToMachines(int[] assignment) {
 		for (int i=0; i<assignment.length; i++) {
-			machines[assignment[i]].assignJob(jobs[i]);
+			machines[assignment[i]].assignJobToEnd(jobs[i]);
 		}
 	}
 	
