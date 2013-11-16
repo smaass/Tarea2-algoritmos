@@ -145,7 +145,20 @@ Este algoritmo genera $m^{n-1}$ asignaciones y para cada una de ellas el cálcul
 \label{fig:1}
 \end{figure}
 
-En la figura \ref{fig:1} se observa que los makespan obtenidos por el algoritmo online fueron mayores a los obtenidos por el algoritmo óptimo en un factor bastante menor a 2, que es la cota teórica calculada. Esta razón tiende a disminuir en promedio, y con desviaciones estándar cada vez más acotadas, a medida que se incrementa el número de trabajos.
+En la figura \ref{fig:1} se observa que los makespan obtenidos por el algoritmo online fueron mayores a los obtenidos por el algoritmo óptimo en un factor bastante menor a 2, que es la cota teórica calculada. Esta razón tiende a disminuir en promedio, y con desviaciones estándar cada vez más acotadas, a medida que se incrementa el número de trabajos.\\
+
+Luego se realizó otra prueba similar pero variando el número de máquinas en vez del número de trabajos. Los resultados de este experimento se graficaron en la figura \ref{fig:2}.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=0.75]{fig2.eps}
+\caption{Comparación de $makespan$ entre algoritmo online y algoritmo óptimo en función del número de máquinas, con 12 trabajos. Cada punto representa la media entre 400 datos, y las barras son la desviación estándar.}
+\label{fig:2}
+\end{figure}
+
+En la figura \ref{fig:2} se observa que al aumentar el número de máquinas la razón $\frac{makespan(online)}{makespan(optimo)}$ crece hasta alcanzar un máximo en $\frac{m}{2} = 6$ máquinas y luego comienza a disminuir. La disminución a partir de ese punto no es muy evidente debido al margen de error y a que sólo se realizó el experimento hasta 7 máquinas (debido al tiempo que tomaba calcular para $m \geq 8$), sin embargo tiene sentido ya que a medida que el número de máquinas se acerca al número de trabajos estas van quedando más desocupadas hasta que a cada máquina le toca exáctamente un trabajo, cuando $m = n$, con lo que $\frac{makespan(online)}{makespan(optimo)} = 1$. Por otra parte, se observa que incluso en el punto máximo, y considerando el margen de error, el rendimiento del algoritmo online con respecto al óptimo está considerablemente por debajo de la cota teórica de 2 calculada. \\
+
+Extrapolando estos resultados podemos afirmar que el rendimiento del algoritmo online con respecto al óptimo suele ser bastante mejor que el peor caso teórico cuando procesa trabajos de duración aleatoria. Este rendimiento tiende a mejorar lentamente a medida que se incrementa el número de trabajos, y tiende a reducirse a medida que aumentan las máquinas hasta alcanzar un máximo en $m/2$, a partir de donde mejora progresivamente hasta igualar al óptimo en $m = n$.
 
 \section{Trabajos con múltiples etapas}
 \subsection{Algoritmo 2-competitivo propuesto}
