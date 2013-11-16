@@ -8,10 +8,10 @@ public class Plan {
 		this.assignment = assignment;
 		this.makespan = makespan;
 	}
-
+/*
 	public int[][] getAssignment() {
 		return assignment;
-	}
+	}*/
 
 	public int getMakespan() {
 		return makespan;
