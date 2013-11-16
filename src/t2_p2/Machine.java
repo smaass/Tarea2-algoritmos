@@ -15,7 +15,7 @@ public class Machine implements Comparable<Machine> {
 		busyTimes = new ArrayList<Range>();
 	}
 	
-	public void assignJob(Job j) {
+	public void assignJob(Job j, int stage) {
 		int timeInMachine = j.time(machineNum);
 		int minTime = 0;
 		Range lastRange = null;

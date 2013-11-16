@@ -29,13 +29,8 @@ public abstract class PlanBuilder {
 	}
 	
 	/**
-	 * Assigns each job to a machine
+	 * Assigns each job's stage to a machine
 	 */
 	protected abstract void plan();
-	
-	/**
-	 * Returns assignment as array of ints, where each index represents a job
-	 * and each value a machine's number.
-	 */
-	protected abstract int[] getAssignment();
+	protected abstract int[][] getAssignment();
 }

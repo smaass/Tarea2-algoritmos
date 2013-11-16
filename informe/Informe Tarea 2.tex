@@ -161,6 +161,16 @@ En la figura \ref{fig:2} se observa que al aumentar el número de máquinas la r
 Extrapolando estos resultados podemos afirmar que el rendimiento del algoritmo online con respecto al óptimo suele ser bastante mejor que el peor caso teórico cuando procesa trabajos de duración aleatoria. Este rendimiento tiende a mejorar lentamente a medida que se incrementa el número de trabajos, y tiende a reducirse a medida que aumentan las máquinas hasta alcanzar un máximo en $m/2$, a partir de donde mejora progresivamente hasta igualar al óptimo en $m = n$.
 
 \section{Trabajos con múltiples etapas}
+El problema consiste en un conjunto de $n$ trabajos de $m$ etapas que deben ser procesados por $m$ máquinas, cada etapa en una máquina distinta, una etapa a la vez. En particular:
+
+\begin{itemize}
+\item Cada trabajo $j$ requiere un tiempo $T_{jk}$ para ser procesado en la máquina $k$.
+\item Un trabajo no puede ejecutarse en dos máquinas en paralelo.
+\item Por cada trabajo se debe decidir en qué orden será enviado a cada máquina.
+\item El tiempo para trasferir un trabajo de una máquina a otra es nulo.
+\item Si para la máquina $M_{k}$ existe un lapso de tiempo $[t1, t2]$ en el que no está ocupada y se recibe un trabajo $j$ tal que $T_{jk} < t2 - t1$, se puede asignar el fragmento de trabajo $j$ a la máquina $k$ en el lapso vacío.
+\end{itemize}
+
 \subsection{Algoritmo 2-competitivo propuesto}
 \subsection{Demostración de competitividad}
 \subsection{Comprobación empírica de competitividad}

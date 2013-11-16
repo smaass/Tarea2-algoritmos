@@ -3,7 +3,7 @@ package t2_p2;
 import java.util.List;
 
 public class OfflinePlanner extends PlanBuilder {
-	private int[] assignment;
+	private int[][] assignment;
 
 	public OfflinePlanner(int numMachines, List<Job> jobs) {
 		super(numMachines, jobs);
@@ -13,10 +13,10 @@ public class OfflinePlanner extends PlanBuilder {
 	protected void plan() {
 		int makeSpan = Integer.MAX_VALUE;
 		AssignmentGenerator gen = new AssignmentGenerator(machines.length, jobs.length);
-		assignment = new int[jobs.length];
+		assignment = new int[jobs.length][machines.length];
 		
 		while (gen.hasNext()) {
-			int[] order = gen.nextArrangement();
+			int[][] order = gen.nextArrangement();
 			clearMachines();
 			assignToMachines(order);
 			
@@ -30,9 +30,11 @@ public class OfflinePlanner extends PlanBuilder {
 		assignToMachines(assignment);
 	}
 	
-	private void assignToMachines(int[] assignment) {
+	private void assignToMachines(int[][] assignment) {
 		for (int i=0; i<assignment.length; i++) {
-			machines[assignment[i]].assignJob(jobs[i]);
+			for (int j=0; j<assignment[i].length; j++) {
+				machines[assignment[i][j]].assignJob(jobs[i], j);
+			}
 		}
 	}
 	
@@ -43,12 +45,14 @@ public class OfflinePlanner extends PlanBuilder {
 	}
 
 	@Override
-	protected int[] getAssignment() {
+	protected int[][] getAssignment() {
 		return assignment;
 	}
 	
 	private class AssignmentGenerator {
-		private int[] genArray;
+		private int[][] permutations;
+		private int[][] genArray;
+		private int[] permIndex;
 		private int machines;
 		private int jobs;
 		private boolean finished;
@@ -57,13 +61,14 @@ public class OfflinePlanner extends PlanBuilder {
 			assert(machines > 0 && jobs > 0);
 			this.machines = machines;
 			this.jobs = jobs;
+			permutations = Utils.permutationsArray(machines);
 		}
 		
 		public boolean hasNext() {
 			return !finished;
 		}
 		
-		public int[] nextArrangement() {
+		public int[][] nextArrangement() {
 			mutateArray();
 			return genArray;
 		}
@@ -74,22 +79,28 @@ public class OfflinePlanner extends PlanBuilder {
 				return;
 			}
 			
-			for (int i=genArray.length-1; i>=0; i--) {
-				if (i == 0) {
+			for (int i=permIndex.length-1; i>=0; i--) {
+				if (i == 0 && permIndex[0] == machines-1) {
 					finished = true;
 				}
-				else if (genArray[i] + 1 < machines) {
-					genArray[i]++;
+				else if (permIndex[i] + 1 < machines) {
+					permIndex[i]++;
+					genArray[i] = permutations[permIndex[i]];
 					break;
 				}
 				else {
-					genArray[i] = 0;
+					permIndex[i] = 0;
+					genArray[i] = permutations[permIndex[i]];
 				}
 			}
 		}
 		
 		private void initArray() {
-			this.genArray = new int[jobs];
+			this.permIndex = new int[jobs];
+			this.genArray = new int[jobs][];
+			for (int i=0; i<jobs; i++) {
+				genArray[i] = permutations[permIndex[i]];
+			}
 		}
 	}
 }
