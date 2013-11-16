@@ -21,6 +21,6 @@ x = 2:1:7;
 
 errorbar(x, m, s)
 axis([1 8 1 2])
-xlabel ("Total de m·quinas");
-ylabel ("makespan(online) / makespan(Ûptimo)");
+xlabel ("Total de m√°quinas");
+ylabel ("makespan(online) / makespan(√≥ptimo)");
 print -dsvg fig2.svg

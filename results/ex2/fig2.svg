@@ -78,10 +78,10 @@
 		<text><tspan>8</tspan></text>
 	</g>
 	<path  d='M42.8,11.3 L42.8,393.6 L559.1,393.6 L559.1,11.3 L42.8,11.3 Z  h0.01'/>	<g transform="translate(11.8,202.5) rotate(-90)" style="stroke:none; fill:rgb(0,0,0); font-family:{}; font-size:10.00pt; text-anchor:middle">
-		<text><tspan>makespan(online) / makespan(Ûptimo)</tspan></text>
+		<text><tspan>makespan(online) / makespan(√≥ptimo)</tspan></text>
 	</g>
 	<g transform="translate(300.9,426.6)" style="stroke:none; fill:rgb(0,0,0); font-family:{}; font-size:10.00pt; text-anchor:middle">
-		<text><tspan>Total de m·quinas</tspan></text>
+		<text><tspan>Total de m√°quinas</tspan></text>
 	</g>
 </g>
 	<g id="gnuplot_plot_1a" ><title>gnuplot_plot_1a</title>
