@@ -1,89 +1,97 @@
 package t2_p2;
 
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Collections;
 
 public class Machine {
 	private int machineNum;
 	private ArrayList<Range> freeTimes;
-	private Range endRange;
-	private int maxBusyTime;
+	private int freeRanges;
 	
 	public Machine(int num) {
 		machineNum = num;
-		maxBusyTime = 0;
 		freeTimes =  new ArrayList<Range>();
-		endRange  =  new Range(0, Integer.MAX_VALUE);
+		freeRanges = 1;
+		freeTimes.add(new Range(0, Integer.MAX_VALUE));
+		
+		//System.out.println("init");
+		//printM(freeTimes);
 	}
 	
-	public void assignJob(Job j) {
-		int freeSpace = canTakeJob(j);
-		if (freeSpace > -1) {
-			assignJobIntoFreeSpace(j, freeSpace);
-		}
-		else {
-			assignJobToEnd(j);
-		}
-	}
-	
-	private void createFreeTimes(ArrayList<Range> jobBusyTimes){
-		for (Range r: jobBusyTimes){
-			Range[] splits = endRange.split(r);
-			
-			if(splits[0]!= null){
-				freeTimes.add(splits[0]);
-				endRange = splits[1];
-				maxBusyTime = endRange.start();
+	public void assignJob(Job j){
+		//System.out.println("Job: " + ++jobs);
+
+		int timeInMachine = j.time(machineNum);
+		ArrayList<Range> jobBusyTimes = j.busyTimes();
+		ArrayList<Range> tempFreeTimes = new ArrayList<Range>();// = (ArrayList<Range>) freeTimes.clone();
+		
+		//System.out.println("free antes:");
+		//printM(freeTimes);
+		
+		// A todos los rangos disponibles de la maquina, se sustrae los rangos de tiempo ocupados por el trabajo
+		tempFreeTimes = (ArrayList<Range>) freeTimes.clone();
+		int size = tempFreeTimes.size();
+		int i;
+		Range r;
+		for (i = 0; i < size; i++){
+			r = tempFreeTimes.get(i);
+
+			for(Range jRange: jobBusyTimes) {
+				if (r.inRange(jRange)) {
+					Range[] splits = r.split(jRange);
+
+					//System.out.println("split");
+					//System.out.println("oRange:[" + r.start() + "," + r.end()+"] jRange:["+jRange.start()+","+jRange.end()+"]");
+					
+					if (splits[1] != null) {
+						r = tempFreeTimes.set(i,splits[1]);
+					}
+					if (splits[0] != null) {
+						tempFreeTimes.add(i,splits[0]);
+						size++;
+					}
+				}
 			}
 		}
-	}
-	
-	public void assignJobToEnd(Job j) {
-		int timeInMachine = j.time(machineNum);
-		int newMaxBusyTime = timeInMachine + maxBusyTime;
 		
-		createFreeTimes(j.busyTimes());
-
-		// Se agrega el job como ultimo proceso de la maquina y se marca un nuevo rango ocupado
-		Range jobBusyTime = new Range(maxBusyTime, newMaxBusyTime);
-		j.addBusyTime(jobBusyTime);
-
-		maxBusyTime = newMaxBusyTime;
-		endRange.setStart(maxBusyTime);
-	}
-	
-	public void assignJobIntoFreeSpace(Job j, int i) {
-		int timeInMachine = j.time(machineNum);
-
-		Range[] freeTimesArray = (Range[]) freeTimes.toArray();
-
-		Range selectedFreeRange = freeTimesArray[i];
-
-		Range[] splits = selectedFreeRange.split(new Range(selectedFreeRange.start(), selectedFreeRange.start() + timeInMachine));
-
-		freeTimes.remove(selectedFreeRange);
+		//System.out.println("temporal despues:");
+		//printM(tempFreeTimes);
 		
-		// Este rango de tiempo esta ahora ocupado por el trabajo
-		j.addBusyTime(splits[0]);
-		
-		if(splits[1].length() > 0){
-			freeTimes.add(splits[1]);
-		}
+		// Ahora, se recorren los rangos de tiempo disponibles, y se determina donde se puede agregar
+		Range selectedRange = null;
+		for (i = 0; i < size; i++) {
+			r = tempFreeTimes.get(i);
 
-		Collections.sort(freeTimes, new RangeComparatorByStart());
-	}
-	
-	public int canTakeJob(Job j) {
-		Range free;
-		
-		for(int i = 0; i < freeTimes.size(); i++){
-			free = freeTimes.get(i);
-			if(j.fitInRange(machineNum, free)){
-				return i;
+			if(r.length() >= timeInMachine) {
+				// Este es el rango donde se insertara el job!
+				selectedRange = new Range(r.start(), r.start() + timeInMachine);
+				j.addBusyTime(selectedRange); // el trabajo tiene ahora esta zona de tiempo ocupada
+				break; // me salgo del ciclo
 			}
 		}
-		return -1;
+		
+		//if(selectedRange != null)
+			//System.out.println("selected: " + selectedRange.start() + " " + selectedRange.end());
+		
+		// Se inserta el rango de tiempo dentro de algun rango disponible real de la maquina y se actualiza
+		for (i = 0; i < size; i++) {
+			r = tempFreeTimes.get(i);
+
+			if (r.inRange(selectedRange)) {
+				Range[] splits = r.split(selectedRange);
+				
+				if (splits[1] != null) {
+					r = freeTimes.set(i, splits[1]);
+				}
+				if (splits[0] != null) {
+					freeTimes.add(i, splits[0]);
+					freeRanges++;
+					size++;
+				}
+				break;
+			}
+		}
+		//System.out.println("free despues:");
+		//printM(freeTimes);
 	}
 	
 	// Espacio libre de la maquina
@@ -96,25 +104,28 @@ public class Machine {
 		}
 	}
 	
+	public void printM(ArrayList<Range> rl){
+		for(Range r: rl){
+			System.out.println("start:" + r.start() + " end: " + r.end());
+		}
+	}
+	
 	// Ultimo tiempo ocupado por la maquina
 	public int time() {
-		return maxBusyTime;
+		if (freeRanges == 0){
+			return 0;
+		} else {
+			return freeTimes.get(freeRanges-1).start();
+		}
 	}
 	
 	public void clear() {
-		maxBusyTime = 0;
 		freeTimes =  new ArrayList<Range>();
+		freeTimes.add(new Range(0, Integer.MAX_VALUE));
+		freeRanges = 1;
 	}
 	
 	public int num() {
 		return  machineNum;
-	}
-	
-	private class RangeComparatorByStart implements Comparator<Range>{
-		
-		@Override
-		public int compare(Range x, Range y){
-			return x.start() - y.start();
-		}
 	}
 }
