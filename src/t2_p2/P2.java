@@ -11,13 +11,14 @@ public class P2 {
 	
 	public static void main(String[] args) {
 		System.out.println("Experimentando...");
-		experiments();
+		//experiments();
+		experiment(4, 4, 10);
 		System.out.println("Fin :D");
 	}
 	
 	public static void experiments() {
-		for (int i=2; i<=6; i+=2){
-			experiment(3, i, 400);
+		for (int i=4; i<=8; i+=2){
+			experiment(3, i, 10);
 		}
 	}
 	
