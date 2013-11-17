@@ -172,11 +172,59 @@ El problema consiste en un conjunto de $n$ trabajos de $m$ etapas que deben ser 
 \end{itemize}
 
 \subsection{Algoritmo 2-competitivo propuesto}
+	Dada una lista $L$ de $n$ trabajos, el algoritmo toma en orden cada trabajo $j$ y procede del siguiente modo:
+	
+\begin{itemize}
+\item Recorre todas las máquinas. Para cada máquina $M_{k}$, donde $k \in [0, m-1]$, se verifica si esta contiene un espacio cuyo tiempo sea menor o igual a $T_{jk}$, y si es así, entonces se asigna j a ese espacio.
+\item Las máquinas a las que no se les haya asignado un trabajo en el paso anterior se ordenan según su tiempo total.
+\item Mmm.. no estoy muy seguro de cómo sigue.
+\end{itemize}
+	
 \subsection{Demostración de competitividad}
+
 \subsection{Comprobación empírica de competitividad}
+Del mismo modo que para el caso con trabajos de una etapa, para comprobar empíricamente la competitividad de este algoritmo se procedió a implementarlo en Java junto a un algoritmo que encuentra el makespan óptimo para este problema. Luego se hicieron pruebas con ambos algoritmos, usando los mismos datos, y se compararon los makespan obtenidos.
+
 \subsubsection{Implementación del algoritmo online}
+
 \subsubsection{Implementación del algoritmo óptimo}
+Para obtener la asignación de una lista $L$ de $n$ trabajos de $m$ etapas a $m$ máquinas que produce el menor makespan, se generaron todas las posibles asignaciones. Para esto se utilizó un arreglo bi-dimensional $A$ de tamaño $n \times m$, donde para cada trabajo $i \in [0, n-1]$, $A_{i}$ es un arreglo de tamaño $m$ tal que para todo $j \in [0, m-1]$, $j$ representa el orden en el cual el trabajo $i$ debe ser procesado en la máquina $A_{i,j}$. Por ejemplo, si $A_{1,0} = 2$ y $A_{1,1} = 0$, entonces el trabajo $1$ será procesado primero por la máquina $2$ y después por la máquina $0$. \\
+
+Para generar las asignaciones se utilizó un objeto $G$ encargado de generar asignaciones a través de su método $G.nextAssignment()$, y de señalar si hay más para generar a través de su método $G.hasNext()$, como en el caso de trabajos de una etapa.\\
+
+El algoritmo funciona del siguiente modo:
+
+\begin{itemize}
+\item Se inicializa el entero $minMakespan := Integer.MAX\_INT$
+\item Mientras $G.hasNext()$ entregue verdadero:
+	\begin{itemize}
+	\item Se asigna $A' := G.nextAssignment()$.
+	\item Se prueba la asignación $A'$ con la lista $L$ y $m$ máquinas y se calcula su $makespan$.
+	\item Si $makespan(A') < minMakespan$:
+		\begin{itemize}
+		\item Se copia $A'$ en $A$. 
+		\item $minMakespan := makespan(A')$.
+		\end{itemize}
+	\end{itemize}
+\item Ahora $A$ contiene la asignación que minimiza el makespan.
+\end{itemize}
+
+	 El objeto $G$ mantiene un arreglo bi-dimensional $B$ interno que va modificando para producir cada asignación. Para esto, $G$ posee una lista $P$ de tamaño $m!$ con todas las permutaciones de los números entre $0$ y $m-1$. $B$ se inicializa con todas sus entradas conteniendo la misma permutación ($P_{0}$), representando que todos los trabajos son asignados en el mismo orden a las máquinas. Además, se hace uso de un arreglo auxiliar $I$ de tamaño $n$ tal que para todo $i \in [0,n-1]$, $I_{i}$ representa el índice de la permutación en $P$ que le corresponde al trabajo $i$ ($B_{i} := P(I_{i})$). \\
+	 
+$G.nextAssignment()$ opera del siguiente modo:
+
+\begin{itemize}
+\item Se itera desde $i = n-1$ hasta $i = 0$:
+	\begin{itemize}
+	\item Si $i = 0$ y $I_{0} = m!$, desde ahora $G.hasNext()$ siempre retornará falso. Se sale del ciclo.
+	\item Si $I_{i} + 1 < m!$, se asigna $I_{i} := I_{i} + 1$, $B_{i} := P(I_{i})$, y se sale del ciclo.
+	\item En otro caso, se asigna $I_{i} = 0$, $B_{i} := P(I_{i})$, y se continúa en el ciclo.
+	\end{itemize}
+\item Se retorna $B$, el cual representa una nueva asignación.
+\end{itemize}
+
 \subsubsection{Experimentos}
+
 \subsubsection{Resultados}
 
 \section{Conclusiones}
