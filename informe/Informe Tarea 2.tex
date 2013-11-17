@@ -172,20 +172,32 @@ El problema consiste en un conjunto de $n$ trabajos de $m$ etapas que deben ser 
 \end{itemize}
 
 \subsection{Algoritmo 2-competitivo propuesto}
-	Dada una lista $L$ de $n$ trabajos, el algoritmo toma en orden cada trabajo $j$ y procede del siguiente modo:
+\label{sec:prop-alg2}
+	Para cada trabajo $J$:
+\begin{itemize}
+\item Sea $J_{i}$ su etapa a ejecutarse en la máquina $M_{i}$.
+\item Sea $A$ el conjunto de todos los $J_{i}$ que ya han sido asignados a su máquina por el planificador.
+\item Sea $time(J_{i})$ el tiempo en el cual $J_{i}$ se habrá ejecutado tras haberse asignado.
+\item Sea $minTime(J) = \max_{J_{i} \in A}{time(J_{i})}$
+\end{itemize}	
+
+Dada una lista $L$ de $n$ trabajos, el algoritmo toma en orden cada trabajo $J$ y procede del siguiente modo:
 	
 \begin{itemize}
-\item Recorre todas las máquinas. Para cada máquina $M_{k}$, donde $k \in [0, m-1]$, se verifica si esta contiene un espacio cuyo tiempo sea menor o igual a $T_{jk}$, y si es así, entonces se asigna j a ese espacio.
-\item Las máquinas a las que no se les haya asignado un trabajo en el paso anterior se ordenan según su tiempo total.
-\item Mmm.. no estoy muy seguro de cómo sigue.
+\item[1.] Sea un conjunto $S = \phi$.
+\item[2.] Se recorren todas las máquinas. Para cada máquina $M_{k}$, donde $k \in [0, m-1]$, se busca si esta contiene un espacio $S_{k} = (t_{inicio}, t_{fin})$ tal que $t_{fin} - t_{inicio} \geq T_{jk}$ y $t_{inicio} >= minTime(J)$. Si en $M_{k}$ hay más de un conjunto que cumpla con esto entonces se toma como $S_{k}$ el que tenga un menor $t_{inicio}$. Se agrega $S_{k}$ a $S$.
+\item[3.] Se recorren los espacios en $S$ y se saca el $S_{k}$ que tenga menor $t_{inicio}$. Luego, se asigna $J_{k}$ a $M_{k}$ en ese espacio. Ahora $minTime(J) = time(J_{k})$. Si $S \not = \phi$ se vuelve al punto 1.
+\item[4.] Si quedan $J_{k}$ sin asignar es porque no habían espacios disponibles, y por ende estos deben asignarse últimos en su respectiva máquina. El orden de asignación será desde la máquina de menor tiempo total a la de mayor.
 \end{itemize}
 	
 \subsection{Demostración de competitividad}
+Bla, bla, bla.
 
 \subsection{Comprobación empírica de competitividad}
 Del mismo modo que para el caso con trabajos de una etapa, para comprobar empíricamente la competitividad de este algoritmo se procedió a implementarlo en Java junto a un algoritmo que encuentra el makespan óptimo para este problema. Luego se hicieron pruebas con ambos algoritmos, usando los mismos datos, y se compararon los makespan obtenidos.
 
 \subsubsection{Implementación del algoritmo online}
+Se implementó la idea descrita en la sección \ref{sec:prop-alg2}.
 
 \subsubsection{Implementación del algoritmo óptimo}
 Para obtener la asignación de una lista $L$ de $n$ trabajos de $m$ etapas a $m$ máquinas que produce el menor makespan, se generaron todas las posibles asignaciones. Para esto se utilizó un arreglo bi-dimensional $A$ de tamaño $n \times m$, donde para cada trabajo $i \in [0, n-1]$, $A_{i}$ es un arreglo de tamaño $m$ tal que para todo $j \in [0, m-1]$, $j$ representa el orden en el cual el trabajo $i$ debe ser procesado en la máquina $A_{i,j}$. Por ejemplo, si $A_{1,0} = 2$ y $A_{1,1} = 0$, entonces el trabajo $1$ será procesado primero por la máquina $2$ y después por la máquina $0$. \\
@@ -224,10 +236,11 @@ $G.nextAssignment()$ opera del siguiente modo:
 \end{itemize}
 
 \subsubsection{Experimentos}
+Lamentablemente hay algún problema en la implementación, que por tiempo no pudimos reparar, y que produce que los makespan en el caso online y offline sean iguales. Por esta razón no alcanzamos a obtener resultados de experimentos :(.
 
 \subsubsection{Resultados}
 
-\section{Conclusiones}
+\section{Conclusión}
 
 %\end{doublespace}
 \end{document}
