@@ -121,7 +121,8 @@ public class Machine {
 	
 	public void clear() {
 		freeTimes =  new ArrayList<Range>();
-		freeRanges = 0;
+		freeTimes.add(new Range(0, Integer.MAX_VALUE));
+		freeRanges = 1;
 	}
 	
 	public int num() {
