@@ -16,8 +16,8 @@ public class P2 {
 	}
 	
 	public static void experiments() {
-		for (int i=8; i<=16; i+=2){
-			experiment(4, i, 400);
+		for (int i=2; i<=6; i+=2){
+			experiment(3, i, 400);
 		}
 	}
 	
@@ -41,6 +41,7 @@ public class P2 {
 	private static void comparePlans(int machines, List<Job> jobs, int[] output) {
 		Plan offline = new OfflinePlanner(machines, jobs).getPlan();
 		Plan online = new OnlinePlanner(machines, jobs).getPlan();
+		
 		output[0] = offline.getMakespan();
 		output[1] = online.getMakespan();
 	}

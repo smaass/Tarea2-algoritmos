@@ -28,17 +28,6 @@ public class Job {
 	public ArrayList<Range> busyTimes() {
 		return busyTimes;
 	}
-	
-	public boolean fitInRange(int machine, Range machineRange) {
-		Range reducedRange = new Range(machineRange.start(), machineRange.end());
-		for (Range r : busyTimes) {
-			reducedRange.substract(r);
-		}
-		if (reducedRange.length() > time(machine)){
-			return true;
-		}
-		return false;
-	}
 
 	public void addBusyTime(Range range) {
 		busyTimes.add(range);
