@@ -2,7 +2,7 @@ package t2_p2;
 
 import java.util.ArrayList;
 
-public class Machine {
+public class Machine implements Comparable<Machine>{
 	private int machineNum;
 	private ArrayList<Range> freeTimes;
 	private int freeRanges;
@@ -119,13 +119,30 @@ public class Machine {
 		}
 	}
 	
+	public int ranges(){
+		return freeRanges;
+	}
+	
 	public void clear() {
-		freeTimes =  new ArrayList<Range>();
+		freeTimes.clear();
+		//freeTimes =  new ArrayList<Range>();
 		freeTimes.add(new Range(0, Integer.MAX_VALUE));
 		freeRanges = 1;
 	}
 	
 	public int num() {
 		return  machineNum;
+	}
+	
+	public int getTime(int i){
+		return freeTimes.get(i).start();
+	}
+
+	@Override
+	public int compareTo(Machine m) {
+		if(this.ranges() > 0 && m.ranges() > 0){
+			return this.getTime(0) - m.getTime(0);
+		}
+		return 0;
 	}
 }
