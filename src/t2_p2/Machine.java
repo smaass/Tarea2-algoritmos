@@ -4,14 +4,14 @@ import java.util.ArrayList;
 
 public class Machine implements Comparable<Machine>{
 	private int machineNum;
-	private ArrayList<Range> freeTimes;
+	private ArrayList<int[]> freeTimes;
 	private int freeRanges;
 	
 	public Machine(int num) {
 		machineNum = num;
-		freeTimes =  new ArrayList<Range>();
+		freeTimes =  new ArrayList<int[]>();
 		freeRanges = 1;
-		freeTimes.add(new Range(0, Integer.MAX_VALUE));
+		freeTimes.add(Range.newRange(0, Integer.MAX_VALUE));
 		
 		//System.out.println("init");
 		//printM(freeTimes);
@@ -21,23 +21,23 @@ public class Machine implements Comparable<Machine>{
 		//System.out.println("Job: " + ++jobs);
 
 		int timeInMachine = j.time(machineNum);
-		ArrayList<Range> jobBusyTimes = j.busyTimes();
-		ArrayList<Range> tempFreeTimes = new ArrayList<Range>();// = (ArrayList<Range>) freeTimes.clone();
+		ArrayList<int[]> jobBusyTimes = j.busyTimes();
+		ArrayList<int[]> tempFreeTimes = new ArrayList<int[]>();// = (ArrayList<Range>) freeTimes.clone();
 		
 		//System.out.println("free antes:");
 		//printM(freeTimes);
 		
 		// A todos los rangos disponibles de la maquina, se sustrae los rangos de tiempo ocupados por el trabajo
-		tempFreeTimes = (ArrayList<Range>) freeTimes.clone();
+		tempFreeTimes = (ArrayList<int[]>) freeTimes.clone();
 		int size = tempFreeTimes.size();
 		int i;
-		Range r;
+		int[] r;
 		for (i = 0; i < size; i++){
 			r = tempFreeTimes.get(i);
 
-			for(Range jRange: jobBusyTimes) {
-				if (r.inRange(jRange)) {
-					Range[] splits = r.split(jRange);
+			for(int[] jRange: jobBusyTimes) {
+				if (Range.inRange(r, jRange)) {
+					int[][] splits = Range.split(r, jRange);
 
 					//System.out.println("split");
 					//System.out.println("oRange:[" + r.start() + "," + r.end()+"] jRange:["+jRange.start()+","+jRange.end()+"]");
@@ -57,13 +57,13 @@ public class Machine implements Comparable<Machine>{
 		//printM(tempFreeTimes);
 		
 		// Ahora, se recorren los rangos de tiempo disponibles, y se determina donde se puede agregar
-		Range selectedRange = null;
+		int[] selectedRange = new int[2];
 		for (i = 0; i < size; i++) {
 			r = tempFreeTimes.get(i);
 
-			if(r.length() >= timeInMachine) {
+			if(Range.length(r) >= timeInMachine) {
 				// Este es el rango donde se insertara el job!
-				selectedRange = new Range(r.start(), r.start() + timeInMachine);
+				selectedRange = Range.newRange(Range.start(r), Range.start(r) + timeInMachine);
 				j.addBusyTime(selectedRange); // el trabajo tiene ahora esta zona de tiempo ocupada
 				break; // me salgo del ciclo
 			}
@@ -76,8 +76,8 @@ public class Machine implements Comparable<Machine>{
 		for (i = 0; i < size; i++) {
 			r = tempFreeTimes.get(i);
 
-			if (r.inRange(selectedRange)) {
-				Range[] splits = r.split(selectedRange);
+			if (Range.inRange(r, selectedRange)) {
+				int[][] splits = Range.split(r, selectedRange);
 				
 				if (splits[1] != null) {
 					r = freeTimes.set(i, splits[1]);
@@ -96,17 +96,17 @@ public class Machine implements Comparable<Machine>{
 	
 	// Espacio libre de la maquina
 	public int space(){
-		Range r = freeTimes.get(0);
+		int[] r = freeTimes.get(0);
 		if (r != null){
-			return r.length();
+			return Range.length(r);
 		} else {
 			return 0; 
 		}
 	}
 	
-	public void printM(ArrayList<Range> rl){
-		for(Range r: rl){
-			System.out.println("start:" + r.start() + " end: " + r.end());
+	public void printM(ArrayList<int[]> rl){
+		for(int[] r: rl){
+			System.out.println("start:" + Range.start(r) + " end: " + Range.end(r));
 		}
 	}
 	
@@ -115,7 +115,7 @@ public class Machine implements Comparable<Machine>{
 		if (freeRanges == 0){
 			return 0;
 		} else {
-			return freeTimes.get(freeRanges-1).start();
+			return Range.start(freeTimes.get(freeRanges-1));
 		}
 	}
 	
@@ -126,7 +126,7 @@ public class Machine implements Comparable<Machine>{
 	public void clear() {
 		freeTimes.clear();
 		//freeTimes =  new ArrayList<Range>();
-		freeTimes.add(new Range(0, Integer.MAX_VALUE));
+		freeTimes.add(Range.newRange(0, Integer.MAX_VALUE));
 		freeRanges = 1;
 	}
 	
@@ -135,7 +135,7 @@ public class Machine implements Comparable<Machine>{
 	}
 	
 	public int getTime(int i){
-		return freeTimes.get(i).start();
+		return Range.start(freeTimes.get(i));
 	}
 
 	@Override

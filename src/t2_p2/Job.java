@@ -6,17 +6,17 @@ import java.util.Random;
 public class Job {
 	private static Random rand = new Random();
 	private final int[] times;
-	private ArrayList<Range> busyTimes;
-	
+	private ArrayList<int[]> busyTimes;
+
 	public Job(int[] times) {
 		this.times = times;
-		this.busyTimes = new ArrayList<Range>();
+		this.busyTimes = new ArrayList<int[]>();
 	}
-	
+
 	public int time(int machineId) {
 		return times[machineId];
 	}
-	
+
 	public static Job randomJob(int machines) {
 		int[] times = new int[machines];
 		for(int i = 0; i < machines; i++){
@@ -25,11 +25,11 @@ public class Job {
 		return new Job(times);
 	}
 
-	public ArrayList<Range> busyTimes() {
+	public ArrayList<int[]> busyTimes() {
 		return busyTimes;
 	}
 
-	public void addBusyTime(Range range) {
+	public void addBusyTime(int[] range) {
 		busyTimes.add(range);
 	}
 }
