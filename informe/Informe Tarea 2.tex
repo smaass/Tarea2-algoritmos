@@ -191,7 +191,7 @@ Dada una lista $L$ de $n$ trabajos, el algoritmo toma en orden cada trabajo $J$ 
 \end{itemize}
 	
 \subsection{Demostración de competitividad}
-
+La 2-competitividad se deduce trivialmente de la parte anterior.
 
 \subsection{Comprobación empírica de competitividad}
 Del mismo modo que para el caso con trabajos de una etapa, para comprobar empíricamente la competitividad de este algoritmo se procedió a implementarlo en Java junto a un algoritmo que encuentra el makespan óptimo para este problema. Luego se hicieron pruebas con ambos algoritmos, usando los mismos datos, y se compararon los makespan obtenidos.
@@ -238,11 +238,10 @@ $G.nextAssignment()$ opera del siguiente modo:
 Este algoritmo genera $(m!)^{n}$ asignaciones distintas.
 
 \subsubsection{Experimentos}
-Lamentablemente hay algún problema en la implementación, que por tiempo no pudimos reparar, y que produce que los makespan en el caso online y offline sean iguales. Por esta razón no alcanzamos a obtener resultados de experimentos :(.
-
-\subsubsection{Resultados}
+Lamentablemente hay problemas en la implementación, que por tiempo no pudimos reparar. Intentamos de dos maneras, una produce que los makespan en el caso online y offline sean iguales, y otra da makespans distintos $(offline < online)$ pero muy altos. Por esta razón no alcanzamos a obtener resultados de experimentos :(.
 
 \section{Conclusión}
+De los resultados obtenidos en el problema con trabajos de una etapa podemos concluir que el algoritmo online resultó ser una aproximación bastante buena con respecto al óptimo, sobre todo considerando que la versión online toma tiempo $O(n\log{m})$ mientras que el óptimo toma tiempo exponencial. Esto es muy importante ya que diversos problemas difíciles ($NP$) pueden aproximarse mediante soluciones online competitivas y rápidas. Por ejemplo, el problema del vendedor viajero que tiene una aproximación lineal muy eficiente con respecto al óptimo que es $NP-duro$.
 
 %\end{doublespace}
 \end{document}
