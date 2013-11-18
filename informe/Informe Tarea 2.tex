@@ -191,7 +191,7 @@ Dada una lista $L$ de $n$ trabajos, el algoritmo toma en orden cada trabajo $J$ 
 \end{itemize}
 	
 \subsection{Demostración de competitividad}
-Bla, bla, bla.
+
 
 \subsection{Comprobación empírica de competitividad}
 Del mismo modo que para el caso con trabajos de una etapa, para comprobar empíricamente la competitividad de este algoritmo se procedió a implementarlo en Java junto a un algoritmo que encuentra el makespan óptimo para este problema. Luego se hicieron pruebas con ambos algoritmos, usando los mismos datos, y se compararon los makespan obtenidos.
@@ -234,6 +234,8 @@ $G.nextAssignment()$ opera del siguiente modo:
 	\end{itemize}
 \item Se retorna $B$, el cual representa una nueva asignación.
 \end{itemize}
+
+Este algoritmo genera $(m!)^{n}$ asignaciones distintas.
 
 \subsubsection{Experimentos}
 Lamentablemente hay algún problema en la implementación, que por tiempo no pudimos reparar, y que produce que los makespan en el caso online y offline sean iguales. Por esta razón no alcanzamos a obtener resultados de experimentos :(.
